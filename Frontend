@@ -1,1 +1,132 @@
+```markdown
+# Steps to Set Up This Project Locally
+
+## Clone the Repository:
+```bash
+  git clone https://github.com/YOUR-USERNAME/job-hackathon.git
+  cd job-hackathon
+```
+
+## Install Dependencies:
+```bash
+  # Frontend
+  cd frontend
+  npm install
+  npm run dev
+```
+
+## Folder Structure:
+```
+job-hackathon/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Header.tsx
+│   │   │   ├── LoginForm.tsx
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   ├── Login.tsx
+│   │   ├── hooks/
+│   │   ├── api/
+│   │   │   ├── auth.ts
+│   │   ├── context/
+│   │   │   ├── AuthContext.tsx
+│   │   ├── utils/
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   ├── package.json
+│   ├── tailwind.config.js
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│
+├── README.md
+```
+
+## Full Frontend Code
+
+### **AuthContext.tsx**
+```tsx
+import { createContext, useState, useContext } from 'react';
+
+interface AuthContextType {
+  user: string | null;
+  login: (username: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<string | null>(null);
+
+  const login = (username: string) => setUser(username);
+  const logout = () => setUser(null);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
+```
+
+### **LoginForm.tsx**
+```tsx
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+
+const LoginForm = () => {
+  const [username, setUsername] = useState('');
+  const { login } = useAuth();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(username);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md">
+      <input
+        type="text"
+        placeholder="Enter username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        className="border p-2 w-full"
+      />
+      <button type="submit" className="bg-blue-500 text-white p-2 w-full mt-2">Login</button>
+    </form>
+  );
+};
+
+export default LoginForm;
+```
+
+### **App.tsx**
+```tsx
+import { AuthProvider } from './context/AuthContext';
+import LoginForm from './components/LoginForm';
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <LoginForm />
+      </div>
+    </AuthProvider>
+  );
+};
+
+export default App;
+```
+
+---
+
+## Next Steps:
+1. Push this to **GitHub**
+2. Deploy **Frontend** (Vercel/Netlify)
+
+Let me know if you need modifications! 🚀
+```
 
